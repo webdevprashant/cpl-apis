@@ -22,6 +22,7 @@ const schema = new mongoose.Schema({
   disease: { type: String, required: false },
   parameters: [{ type: String, required: false }],
   organs: [{ type: String, required: false }],
+  testIds: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
   homeCollection: { type: Boolean, required: false, default: true },
   preTestInformation: { type: String, required: false },
   sampleType: { type: String, required: false },
@@ -30,7 +31,7 @@ const schema = new mongoose.Schema({
   isActive: { type: Boolean, required: false, default: true },
   isDeleted: { type: Boolean, required: false, default: false },
   createdAt: { type: Number, required: false, default: Date.now },
-  updatedAt: { type: Number, required: false },
+  updatedAt: { type: Number, required: false, default: null },
 });
 
-export default mongoose.model("test", schema);
+export default mongoose.model("testAndPackage", schema);

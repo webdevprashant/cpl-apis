@@ -56,7 +56,7 @@ router.post("/register", async (req: express.Request, res: express.Response) => 
       req.body.age = new Date().getFullYear() - date.getFullYear() 
     }
 
-    logger(true, "Registering User.");
+    logger(true, "Registering User.", req.body);
     const user = await new UserModel({ ...req.body }).save();
     return res.status(200).json({
       status: true,

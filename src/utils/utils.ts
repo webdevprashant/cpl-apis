@@ -1,5 +1,5 @@
 import winston from "winston";
-import { cplFileURL, subFolders, filesPath } from "./constant";
+import { cplFileURL, subFolders, filesPath, formDataMulterKey } from "./constant";
 import jwt from "jsonwebtoken";
 import unirest from "unirest";
 import multer from "multer";
@@ -86,11 +86,10 @@ function saveFilePath(subFolder: string, keyName: string) {
 function uploadFileLocallyMulter() {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      if (file.fieldname === "test") {
-        cb(null, filesPath + subFolders.test);
-      } else if (file.fieldname === "package") {
-        cb(null, filesPath + subFolders.package);
-      } else if (file.fieldname === "report") {
+      file.originalname = ImgWhiteSpaceRemove(file.originalname);
+      if (file.fieldname === formDataMulterKey.testAndPackage) {
+        cb(null, filesPath + subFolders.testPackages);
+      } else if (file.fieldname === formDataMulterKey.report) {
         cb(null, filesPath + subFolders.report);
       }
     },
@@ -118,6 +117,10 @@ function isEmptyBody(bodydata) {
     }
   }
   return false;
+}
+
+function ImgWhiteSpaceRemove(name) {
+  return name.replace(/\s/g, "")
 }
 
 /**

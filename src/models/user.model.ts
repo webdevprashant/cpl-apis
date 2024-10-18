@@ -10,11 +10,12 @@ const schema = new mongoose.Schema({
   dob: { type: Number, required: false },
   age: { type: Number, required: false },
   address: { type: String, required: false },
+  bookingIds: [{ type: mongoose.Schema.Types.ObjectId, required: false, ref: "booking" }],
   city: { type: String, required: false },
   state: { type: String, required: false },
   gender: { type: String, required: true },
   createdAt: { type: Number, required: false, default: Date.now },
-  updatedAt: { type: Number, required: false },
+  updatedAt: { type: Number, required: false, default: null },
   isActive: { type: Boolean, required: false, default: true },
   isDeleted: { type: Boolean, required: false, default: false },
 });
