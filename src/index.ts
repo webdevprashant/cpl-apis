@@ -21,11 +21,13 @@ import TestPackageRouter from "./routes/testpackageRouter";
 import RoleRouter from "./routes/roleRouter";
 import AuthRouter from "./routes/authRouter";
 import BookingRouter from "./routes/bookingRouter";
+import MandatoryDocumentRouterRouter from "./routes/mandatoryDocumentRouter";
 
 app.use("/testpackages", header , TestPackageRouter);
 app.use("/users", header , UserRouter);
 app.use("/roles", header , RoleRouter);
 app.use("/auth", header , AuthRouter);
+app.use("/mandatorydocuments", header , MandatoryDocumentRouterRouter);
 app.use("/booking" , header , BookingRouter);
 
 app.listen(process.env.port, () => console.log(`Server Listening On Port: ${process.env.port}`));

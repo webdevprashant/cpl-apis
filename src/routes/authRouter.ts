@@ -4,29 +4,40 @@ import { createJWTToken, logger, randomNumber, sendOTP } from "../utils/utils";
 
 const router = express.Router();
 
-router.post("/login", async (req: express.Request, res: express.Response) => {
+router.post("/sign", async (req: express.Request, res: express.Response) => {
   try {
-    const { mobile, password } = req.body;
-    if (!mobile || !password) {
-      return res.status(200).json({
-        status: false,
-        message: `Mobile, Password is must to login.`,
+    if (!req.body.mobile) {
+      logger(false, `Mobile number is must for sign.` , req.body.mobile);
+        return res.json({
+          status: false,
+          message: `Mobile number is must for sign.`,
+        });
+    }
+    const isUserExist = await UserModel.findOne({ mobile: req.body.mobile, isDeleted: false });
+    let OTP = randomNumber();
+    let result = await sendOTP(req.body.mobile, OTP, false);
+    // In Case User Login
+    if (isUserExist) {
+      // Create token
+      const token = createJWTToken(isUserExist);
+      logger(true, `User Logging ${isUserExist.mobile} , OTP : ${OTP}`);
+      return res.status(200)
+      .cookie('token' , token)
+      .json({
+        status: true,
+        message: "User Logging.",
+        data: { isRegistered: true, token: token, OTP: OTP },
       });
     }
-    const user = await UserModel.findOne({ mobile, password, isActive: true });
-    if (!user) {
+    // In Case User Registering 
+    else {
+      logger(true, `User not Registered ${req.body.mobile} , OTP : ${OTP}`);
       return res.status(200).json({
-        status: false,
-        message: "User not found.",
-      });
+        status: true,
+        message: "User not Registered.",
+        data: { isRegistered: false , OTP: OTP },
+      }); 
     }
-    logger(true, "Logging User.", req.body);
-    const token = createJWTToken(user);
-    return res.status(200).json({
-      status: true,
-      message: "Logging User.",
-      data: token,
-    });
   } catch (err) {
     logger(
       false,
@@ -43,11 +54,11 @@ router.post("/login", async (req: express.Request, res: express.Response) => {
 
 router.post("/register", async (req: express.Request, res: express.Response) => {
   try {
-    const { roleId, firstName, mobile, password, address, gender } = req.body;
-    if (!roleId || !firstName || !mobile || !password || !address || !gender) {
+    const { roleId, firstName, mobile, address, gender } = req.body;
+    if (!roleId || !firstName || !mobile || !address || !gender) {
       return res.status(200).json({
         status: false,
-        message: `RoleId ${roleId}, firstName ${firstName}, mobile ${mobile}, password ${password}, address ${address}, gender ${gender} is must for registration.`
+        message: `RoleId ${roleId}, firstName ${firstName}, mobile ${mobile}, address ${address}, gender ${gender} is must for registration.`
       })
     }
 
@@ -58,10 +69,11 @@ router.post("/register", async (req: express.Request, res: express.Response) => 
 
     logger(true, "Registering User.", req.body);
     const user = await new UserModel({ ...req.body }).save();
+    const token = createJWTToken(user);
     return res.status(200).json({
       status: true,
       message: "User registration successfull.",
-      data: user,
+      data: token,
     });
   } catch (err) {
     logger(

@@ -1,11 +1,14 @@
+// server files seperate folders
 export const subFolders  = {
   testPackages: "testPackages",
-  report: "reports"
+  report: "reports",
+  document: "document",
 };
 
 export const formDataMulterKey = {
   testAndPackage: "testpackage",
-  report: "report"
+  report: "report",
+  mandatoryDocument: "document"
 }
 
 export const filesPath = "/var/www/testcpl.atf-labs.com/public/assets/";

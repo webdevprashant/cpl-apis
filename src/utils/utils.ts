@@ -91,6 +91,8 @@ function uploadFileLocallyMulter() {
         cb(null, filesPath + subFolders.testPackages);
       } else if (file.fieldname === formDataMulterKey.report) {
         cb(null, filesPath + subFolders.report);
+      } else if (file.fieldname === formDataMulterKey.mandatoryDocument) {
+        cb(null, filesPath + subFolders.document);
       }
     },
     filename: function (req, file, cb) {
@@ -120,7 +122,7 @@ function isEmptyBody(bodydata) {
 }
 
 function ImgWhiteSpaceRemove(name) {
-  return name.replace(/\s/g, "")
+  return name.replace(/[^a-zA-Z0-9.]/g, "")
 }
 
 /**

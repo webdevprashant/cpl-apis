@@ -1,6 +1,6 @@
 import express from "express";
 import TestPackageModel from "../models/testPackage.model";
-import { subFolders } from "../utils/constant";
+import { formDataMulterKey, subFolders } from "../utils/constant";
 import { logger, saveFilePath, uploadFileLocallyMulter } from "../utils/utils";
 
 const router = express.Router();
@@ -52,14 +52,14 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
   }
 });
 
-router.post("/", upload.fields([ { name: "testpackage" }, { name: "report" } ]), async (req: express.Request, res: express.Response) => {
+router.post("/", upload.fields([ { name: formDataMulterKey.testAndPackage }, { name: formDataMulterKey.report } ]), async (req: express.Request, res: express.Response) => {
   try {
-    if (req.files["testpackage"]) {
-      req.body.imageURL = saveFilePath(subFolders.testPackages, req.files["testpackage"][0].filename);
+    if (req.files[formDataMulterKey.testAndPackage]) {
+      req.body.imageURL = saveFilePath(subFolders.testPackages, req.files[formDataMulterKey.testAndPackage][0].filename);
     }
     
-    if (req.files["report"]) {
-      req.body.reportURL = saveFilePath(subFolders.report, req.files["report"][0].filename);
+    if (req.files[formDataMulterKey.report]) {
+      req.body.reportURL = saveFilePath(subFolders.report, req.files[formDataMulterKey.report][0].filename);
     }
 
     logger(true, "Creating testpackage : ", req.body);
@@ -90,14 +90,14 @@ router.post("/", upload.fields([ { name: "testpackage" }, { name: "report" } ]),
   }
 });
 
-router.put("/:id", upload.fields([ { name: "testpackage" }, { name: "report" } ]), async (req: express.Request, res: express.Response) => {
+router.put("/:id", upload.fields([ { name: formDataMulterKey.testAndPackage }, { name: formDataMulterKey.report } ]), async (req: express.Request, res: express.Response) => {
   try {
-    if (req.files["test"]) {
-      req.body.imageURL = saveFilePath(subFolders.testPackages, req.files["testpackage"][0].filename);
+    if (req.files[formDataMulterKey.testAndPackage]) {
+      req.body.imageURL = saveFilePath(subFolders.testPackages, req.files[formDataMulterKey.testAndPackage][0].filename);
     }
     
-    if (req.files["report"]) {
-      req.body.reportURL = saveFilePath(subFolders.report, req.files["report"][0].filename);
+    if (req.files[formDataMulterKey.report]) {
+      req.body.reportURL = saveFilePath(subFolders.report, req.files[formDataMulterKey.report][0].filename);
     }
 
     if (req.body.parameters && (req.body.parameters.includes('*') || req.body.parameters.includes(';'))) {

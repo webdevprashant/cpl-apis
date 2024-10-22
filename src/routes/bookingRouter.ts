@@ -99,6 +99,11 @@ router.get("/:id/patient", async (req: express.Request, res: express.Response) =
 router.post("/", async (req: express.Request, res: express.Response) => {
   try {
     logger(true, "Creating booking : ", req.body);
+    if (req.body.allocatedTo) {
+      req.body.status = 1;        // If booking allocatedTo, status is allocated
+    } else {
+      req.body.status = 0;        // status is pending
+    }
     const booking = await new BookingModel({...req.body}).save();
     return res.status(200).json({
       status: true,
